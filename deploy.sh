@@ -8,4 +8,4 @@ export DOCKER_HOST=tcp://${SERVER_HOST}:${SERVER_PORT}
 git clone https://github.com/bombergame/service-config &&
   mv ./service-config/docker-compose.yml ./docker-compose.yml &&
   ./service-config/decrypt.sh ./service-config . &&
-  docker-compose pull && docker-compose up -d
+  docker-compose -p bombergame pull && docker-compose -p bombergame up -d
