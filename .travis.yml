@@ -1,13 +1,19 @@
 jobs:
   include:
-  - stage: build image
-    services:
-    - docker
-    before_script:
-    - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
-    script:
-    - docker build -t bombergame/gateway .
-    after_success:
-    - if [ ${TRAVIS_BRANCH} = "master" ]; then
-        docker push bombergame/gateway;
-      fi
+    - stage: build image
+      services:
+        - docker
+      script:
+        - ./build_image.sh bombergame/gateway
+      after_success:
+        - if [[ ${TRAVIS_BRANCH} == "master" ]] && [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
+            ./push_image.sh bombergame/gateway;
+          fi
+
+    - stage: deploy
+      services:
+        - docker
+      script:
+        - if [[ ${TRAVIS_BRANCH} == "master" ]] && [[ ${TRAVIS_PULL_REQUEST} == "false" ]]; then
+            ./deploy.sh;
+          fi
